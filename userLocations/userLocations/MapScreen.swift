@@ -25,6 +25,7 @@ class MapScreen: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
+    
     func checkLocationServise() {
         if CLLocationManager.locationServicesEnabled() {
             setupLocation()
@@ -32,7 +33,20 @@ class MapScreen: UIViewController {
             // on location servise
         }
     }
-
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+            break
+        case .denied:
+            break
+        case .notDetermined:
+            break
+        case .restricted:
+            break
+        case .authorizedAlways:
+            break
+        }
+    }
 }
 extension MapScreen: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
