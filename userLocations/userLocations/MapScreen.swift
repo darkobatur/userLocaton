@@ -25,6 +25,13 @@ class MapScreen: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
+    func centarViewOnUserLocation() {
+        if let location = locationManager.location?.coordinate {
+            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 10000, longitudinalMeters: 10000)
+            mapView.setRegion(region, animated: true)
+        }
+    }
+    
     
     func checkLocationServise() {
         if CLLocationManager.locationServicesEnabled() {
