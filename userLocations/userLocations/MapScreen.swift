@@ -14,6 +14,7 @@ class MapScreen: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     let locationManager = CLLocationManager()
+    let regionInMeters: Double = 10000
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +28,7 @@ class MapScreen: UIViewController {
     
     func centarViewOnUserLocation() {
         if let location = locationManager.location?.coordinate {
-            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: 10000, longitudinalMeters: 10000)
+            let region = MKCoordinateRegion.init(center: location, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
             mapView.setRegion(region, animated: true)
         }
     }
@@ -46,6 +47,8 @@ class MapScreen: UIViewController {
         case .authorizedWhenInUse:
             // Do map stuff
             mapView.showsUserLocation = true
+            centarViewOnUserLocation()
+            locationManager.startUpdatingLocation()
             break
         case .denied:
             // Show alert
@@ -63,10 +66,13 @@ class MapScreen: UIViewController {
 }
 extension MapScreen: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // Locatin
+        guard let location = locations.last else {return}
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let region = MKCoordinateRegion.init(center: center, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+        mapView.setRegion(region, animated: true)
     }
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        // authorization
+       checkLocationAuthorization()
     }
     
 }
